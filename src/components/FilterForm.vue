@@ -3,9 +3,13 @@
     <form class="filter-container__form">
       <filter-slider title="Range" />
       <hr class="filter-container__horizontal-line" />
-      <filter-checkbox :items="categories" title="Category" />
+      <filter-checkbox
+        :items="categories"
+        title="Category"
+        @setChexbox="setChexbox"
+      />
       <hr class="filter-container__horizontal-line" />
-      <filter-checkbox :items="brands" title="Brand" />
+      <filter-checkbox :items="brands" title="Brand" @setChexbox="setChexbox" />
     </form>
   </div>
 </template>
@@ -14,7 +18,6 @@
 import { defineComponent } from "vue";
 import FilterSlider from "@/components/FilterSlider.vue";
 import FilterCheckbox from "@/components/FilterCheckbox.vue";
-import data from "../store/data.js";
 
 export default defineComponent({
   name: "FilterForm",
@@ -22,11 +25,27 @@ export default defineComponent({
     FilterSlider,
     FilterCheckbox,
   },
+
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+    },
+
+    brands: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  methods: {
+    setChexbox: function (name, item, checked) {
+      this.$emit("setChexbox", name, item, checked);
+    },
+  },
+
   data() {
-    return {
-      brands: data.brands,
-      categories: data.categories,
-    };
+    return {};
   },
 });
 </script>

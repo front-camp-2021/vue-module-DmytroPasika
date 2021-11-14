@@ -21,7 +21,13 @@
     </div>
     <form class="search-bar__form">
       <div class="search-bar__container">
-        <input class="search-bar__input" type="text" placeholder="Search" />
+        <input
+          class="search-bar__input"
+          type="text"
+          placeholder="Search"
+          v-model="inputValue"
+          @keyup="someHandler(inputValue)"
+        />
       </div>
     </form>
   </div>
@@ -32,6 +38,18 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "SearchBar",
+
+  data() {
+    return {
+      inputValue: "",
+    };
+  },
+
+  methods: {
+    someHandler: function (inputValue) {
+      this.$emit("inputValue", inputValue);
+    },
+  },
 });
 </script>
 

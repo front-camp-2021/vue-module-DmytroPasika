@@ -1,6 +1,6 @@
 <template>
   <div class="cards__list">
-    <card v-for="item in items.slice(0, 9)" :key="item.id" :item="item" />
+    <card v-for="item in items" :key="item.id" :item="item" />
   </div>
 </template>
 

@@ -1,7 +1,11 @@
 <template>
   <div class="filter-container">
     <filter-header />
-    <filter-form />
+    <filter-form
+      :brands="brands"
+      :categories="categories"
+      @setChexbox="setChexbox"
+    />
     <big-button title="RESET ALL FILTERS" />
   </div>
 </template>
@@ -14,10 +18,29 @@ import BigButton from "./BigButton.vue";
 
 export default defineComponent({
   name: "FilterSidebar",
+
   components: {
     FilterHeader,
     FilterForm,
     BigButton,
+  },
+
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+    },
+
+    brands: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  methods: {
+    setChexbox: function (name, item, checked) {
+      this.$emit("setChexbox", name, item, checked);
+    },
   },
 });
 </script>

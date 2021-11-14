@@ -1,12 +1,33 @@
 <template>
   <div class="pagination">
-    <button>
+    <button
+      class="pagination__reference-direction button"
+      @click="setCurrentPage(0, '-')"
+    >
       <img src="@/assets/img/PathNav2.svg" alt="navigation path" href="#123" />
     </button>
 
-    <div class="pagination__pages reference">totalPages</div>
+    <div class="pagination__pages reference">
+      <div
+        class="pagination__container"
+        v-for="item in countPages"
+        :key="item"
+        v-bind:class="{ pagination__active: item === currentPage }"
+      >
+        <button
+          class="pagination__reference reference button"
+          v-bind:class="{ pagination__active: item === currentPage }"
+          @click="setCurrentPage(item)"
+        >
+          {{ item }}
+        </button>
+      </div>
+    </div>
 
-    <button>
+    <button
+      class="pagination__reference-direction button"
+      @click="setCurrentPage(0, '+')"
+    >
       <img src="@/assets/img/PathNav1.svg" alt="navigation path" href="#321" />
     </button>
   </div>
@@ -17,6 +38,33 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "Pagination",
+
+  props: {
+    countPages: {
+      type: Number,
+      required: true,
+    },
+    currentPage: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  methods: {
+    setCurrentPage: function (item = 0, type = "pageClick") {
+      if (type === "pageClick") {
+        this.$emit("setCurrentPage", item);
+      } else if (type === "+" && this.currentPage < this.countPages) {
+        this.$emit("setCurrentPage", this.currentPage + 1);
+      } else if (type === "-" && this.currentPage > 1) {
+        this.$emit("setCurrentPage", this.currentPage - 1);
+      }
+    },
+  },
+
+  data() {
+    return {};
+  },
 });
 </script>
 
@@ -54,7 +102,6 @@ export default defineComponent({
     justify-content: space-around;
     margin: 0px 17px;
     height: 40px;
-    // width: 360px;
     background: map-get($colors, gray);
     border-radius: 20px;
     align-items: center;

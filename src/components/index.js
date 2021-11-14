@@ -15,4 +15,5 @@ export { default as Favorite } from './Favorite.vue'
 export { default as NotFound } from './NotFound.vue'
 export { default as Cart } from './Cart.vue'
 export { default as ItemPage } from './itemPage.vue'
+export { default as Checkbox } from './Checkbox.vue'
 

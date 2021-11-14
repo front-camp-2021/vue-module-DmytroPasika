@@ -1,43 +1,50 @@
 <template>
-  <div>
-    <div class="filter-container__title">{{ title }}</div>
-    <ul class="filter-container__list">
-      <Checkbox
-        v-for="item in items"
-        :key="item"
-        :name="title"
-        :item="item"
-        @setChexbox="setChexbox"
-      />
-    </ul>
-  </div>
+  <li>
+    <div class="filter-container__container-checkbox">
+      <label class="filter-container__label">
+        <input
+          :name="name"
+          type="checkbox"
+          :value="item"
+          class="filter-container__checkbox"
+          :checked="checked"
+          @click="setChexbox(name, item, checked)"
+        />
+        <div class="filter-container__checkbox-custom"></div>
+        <span class="filter-container__value">{{ item }}</span>
+      </label>
+      <div class="filter-container__item-counter">1920</div>
+    </div>
+  </li>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import Checkbox from "./Checkbox.vue";
 
 export default defineComponent({
-  name: "FilterChexbox",
-
+  name: "Checkbox",
   props: {
-    items: {
-      type: Array,
-    },
-    title: {
+    name: {
       type: String,
-      default: "",
+      require: true,
+    },
+    item: {
+      type: String,
+      require: true,
     },
   },
 
   methods: {
     setChexbox: function (name, item, checked) {
-      this.$emit("setChexbox", name, item, checked);
+      this.$emit("setChexbox", name, item, !checked);
+      this.checked = !checked;
     },
   },
 
-  components: {
-    Checkbox,
+  data() {
+    return {
+      checked: false,
+    };
   },
 });
 </script>
