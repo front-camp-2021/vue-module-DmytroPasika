@@ -25,7 +25,7 @@ export default {
   },
 
   methods: {
-    setInputValue: function (inputValue) {
+    setInputValue(inputValue) {
       this.$emit("inputValue", inputValue);
     },
   },

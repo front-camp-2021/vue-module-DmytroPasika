@@ -10,7 +10,7 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: "",
+      required: true,
     },
   },
 });

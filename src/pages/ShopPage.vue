@@ -2,12 +2,13 @@
   <div>
     <header-app />
     <main-app
-      @set-filter="setfilter"
+      :activeFilters="activeFilters"
       :page="page"
       :brands="brands"
       :categories="categories"
       @inputValue="setInputValue"
       @setChexbox="setCheckboxFilter"
+      @clear-filter="clearFilter"
     />
     <pagination
       :countPages="totalPages"
@@ -22,8 +23,9 @@
 import { Header, Main, Pagination } from "@/components/index.js";
 import FilterTypes from "@/helperFn/filter.js";
 import axios from "axios";
+import { defineComponent, provide } from "vue";
 
-export default {
+export default defineComponent({
   name: "ShopPage",
 
   data() {
@@ -32,7 +34,6 @@ export default {
       brandsLink: "http://localhost:3001/brands",
       categoriesLink: " http://localhost:3001/categories",
       products: [],
-      filteredProducts: [],
       brands: [],
       categories: [],
       currentPage: 1,
@@ -58,38 +59,35 @@ export default {
   },
 
   methods: {
+    clearFilter() {
+      this.activeFilters = {
+        listFilters: {
+          brand: [],
+          category: [],
+        },
+        price: {
+          min: 53,
+          max: 85000,
+        },
+        search: "",
+      };
+    },
+
     async getProducts() {
-      await axios
-        .all([
-          axios.get(this.productsLink),
-          axios.get(this.brandsLink),
-          axios.get(this.categoriesLink),
-        ])
-        .then(
-          axios.spread((...responses) => {
-            this.products = responses[0].data;
-            this.brands = responses[1].data;
-            this.categories = responses[2].data;
-            this.filter();
-          })
-        );
+      const promises = [
+        axios.get(this.productsLink),
+        axios.get(this.brandsLink),
+        axios.get(this.categoriesLink),
+      ];
+      const [{ data: products }, { data: brands }, { data: categories }] =
+        await Promise.all(promises);
+      this.products = products;
+      this.brands = brands;
+      this.categories = categories;
     },
 
     filter() {
-      this.filteredProducts = this.getFilteredArray();
       this.currentPage = 1;
-    },
-
-    getFilteredArray() {
-      return Object.entries(this.activeFilters).reduce(
-        (filteredList, filter) => {
-          const [key, value] = filter;
-          return this.hasValue(key, value)
-            ? filteredList.filter((item) => this.filterFn(item, key, value))
-            : filteredList;
-        },
-        this.products
-      );
     },
 
     hasValue(key, value) {
@@ -156,22 +154,28 @@ export default {
       this.currentPage = item;
     },
 
-    setInputValue: function (inputValue) {
+    setInputValue(inputValue) {
       this.activeFilters.search = inputValue;
       this.filter();
     },
 
-    setCheckboxFilter: function (name, value, checked) {
-      let filter = this.activeFilters.listFilters[name.toLowerCase()];
+    setCheckboxFilter(inputData) {
+      let { type, value } = inputData;
 
+      let filter = this.activeFilters.listFilters[type.toLowerCase()];
+      const preparedValue = value.replace("-", " ").toLowerCase();
       if (Array.isArray(filter)) {
-        if (checked) {
-          filter.push(value.replace("-", " ").toLowerCase());
+        if (
+          !this.activeFilters.listFilters[type.toLowerCase()].includes(
+            preparedValue
+          )
+        ) {
+          filter.push(preparedValue);
         } else {
-          filter = filter.filter((i) => i !== value.toLowerCase());
+          filter = filter.filter((i) => i !== preparedValue);
         }
       }
-      this.activeFilters.listFilters[name.toLowerCase()] = filter;
+      this.activeFilters.listFilters[type.toLowerCase()] = filter;
       this.filter();
     },
   },
@@ -181,15 +185,28 @@ export default {
   },
 
   computed: {
-    totalPages: function () {
+    filteredProducts() {
+      return Object.entries(this.activeFilters).reduce(
+        (filteredList, filter) => {
+          const [key, value] = filter;
+          return this.hasValue(key, value)
+            ? filteredList.filter((item) => this.filterFn(item, key, value))
+            : filteredList;
+        },
+        this.products
+      );
+    },
+
+    totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
     },
 
-    page: function () {
+    page() {
       const last = this.currentPage * this.itemsPerPage;
       const first = last - this.itemsPerPage;
       return [...this.filteredProducts.slice(first, last)];
     },
   },
-};
+});
 </script>
+

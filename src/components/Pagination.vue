@@ -51,7 +51,7 @@ export default defineComponent({
   },
 
   methods: {
-    setCurrentPage: function (item = 0, type = "pageClick") {
+    setCurrentPage(item = 0, type = "pageClick") {
       if (type === "pageClick") {
         this.$emit("setCurrentPage", item);
       } else if (type === "+" && this.currentPage < this.countPages) {

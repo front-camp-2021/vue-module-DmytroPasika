@@ -11,9 +11,11 @@ import Card from "./Card.vue";
 export default defineComponent({
   components: { Card },
   name: "CardList",
+
   props: {
     items: {
       type: Array,
+      required: true,
     },
   },
 });

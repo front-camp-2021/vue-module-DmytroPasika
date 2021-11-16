@@ -58,7 +58,7 @@ export default defineComponent({
   props: {
     item: {
       type: Object,
-      default: Function,
+      default: () => {},
     },
   },
 });

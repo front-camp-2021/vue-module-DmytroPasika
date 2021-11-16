@@ -3,12 +3,12 @@
     <div class="filter-container__container-checkbox">
       <label class="filter-container__label">
         <input
-          :name="name"
+          :name="type"
           type="checkbox"
           :value="item"
           class="filter-container__checkbox"
           :checked="checked"
-          @click="setChexbox(name, item, checked)"
+          @click="setChexbox"
         />
         <div class="filter-container__checkbox-custom"></div>
         <span class="filter-container__value">{{ item }}</span>
@@ -24,6 +24,10 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "Checkbox",
   props: {
+    activeFilters: {
+      type: Object,
+      required: true,
+    },
     name: {
       type: String,
       require: true,
@@ -32,19 +36,28 @@ export default defineComponent({
       type: String,
       require: true,
     },
-  },
-
-  methods: {
-    setChexbox: function (name, item, checked) {
-      this.$emit("setChexbox", name, item, !checked);
-      this.checked = !checked;
+    items: {
+      type: Array,
+      default: () => [],
     },
   },
 
-  data() {
-    return {
-      checked: false,
-    };
+  computed: {
+    checked() {
+      return this.activeFilters.listFilters[this.name.toLowerCase()].includes(
+        this.item.replace("-", " ").toLowerCase()
+      );
+    },
+  },
+
+  methods: {
+    setChexbox() {
+      const inputData = {
+        type: this.name,
+        value: this.item,
+      };
+      this.$emit("setChexbox", inputData);
+    },
   },
 });
 </script>

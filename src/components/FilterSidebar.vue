@@ -4,9 +4,13 @@
     <filter-form
       :brands="brands"
       :categories="categories"
+      :active-filters="activeFilters"
       @setChexbox="setChexbox"
     />
-    <big-button title="RESET ALL FILTERS" />
+    <big-button
+      title="RESET ALL FILTERS"
+      @clear-filter="() => $emit('clear-filter')"
+    />
   </div>
 </template>
 
@@ -26,6 +30,11 @@ export default defineComponent({
   },
 
   props: {
+    activeFilters: {
+      type: Object,
+      required: true,
+    },
+
     categories: {
       type: Array,
       required: true,
@@ -38,8 +47,8 @@ export default defineComponent({
   },
 
   methods: {
-    setChexbox: function (name, item, checked) {
-      this.$emit("setChexbox", name, item, checked);
+    setChexbox(inputData) {
+      this.$emit("setChexbox", inputData);
     },
   },
 });

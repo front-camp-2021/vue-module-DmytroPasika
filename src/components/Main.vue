@@ -1,9 +1,10 @@
 <template lang="html">
   <div class="main">
     <filter-sidebar
-      @set-filter="setFilter"
       :categories="categories"
       :brands="brands"
+      :active-filters="activeFilters"
+      @clear-filter="() => $emit('clear-filter')"
       @setChexbox="setChexbox"
     />
     <card-container 
@@ -26,6 +27,11 @@ export default defineComponent({
   },
 
   props: {
+    activeFilters: {
+      type: Object,
+      required: true,
+    },
+
     categories: {
       type: Array,
       required: true,
@@ -43,16 +49,12 @@ export default defineComponent({
   },
 
   methods: {
-    setFilter(value) {
-      this.$emit("set-filter", value);
-    },
-
-    setInputValue: function (inputValue) {
+    setInputValue(inputValue) {
       this.$emit("inputValue", inputValue);
     },
 
-    setChexbox: function (name, item, checked) {
-      this.$emit("setChexbox", name, item, checked);
+    setChexbox(inputData) {
+      this.$emit("setChexbox", inputData);
     },
   },
 });

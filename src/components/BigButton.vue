@@ -1,5 +1,8 @@
 <template>
-  <button class="filter-container__btn-reset button">
+  <button
+    class="filter-container__btn-reset button"
+    @click="() => $emit('clear-filter')"
+  >
     <div class="filter-container__btn-label">{{ title }}</div>
   </button>
 </template>

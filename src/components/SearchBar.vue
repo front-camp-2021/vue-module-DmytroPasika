@@ -26,7 +26,7 @@
           type="text"
           placeholder="Search"
           v-model="inputValue"
-          @keyup="someHandler(inputValue)"
+          @keyup="setInputValue(inputValue)"
         />
       </div>
     </form>
@@ -46,7 +46,7 @@ export default defineComponent({
   },
 
   methods: {
-    someHandler: function (inputValue) {
+    setInputValue(inputValue) {
       this.$emit("inputValue", inputValue);
     },
   },

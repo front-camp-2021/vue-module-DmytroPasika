@@ -6,10 +6,16 @@
       <filter-checkbox
         :items="categories"
         title="Category"
+        :active-filters="activeFilters"
         @setChexbox="setChexbox"
       />
       <hr class="filter-container__horizontal-line" />
-      <filter-checkbox :items="brands" title="Brand" @setChexbox="setChexbox" />
+      <filter-checkbox
+        :items="brands"
+        title="Brand"
+        @setChexbox="setChexbox"
+        :active-filters="activeFilters"
+      />
     </form>
   </div>
 </template>
@@ -27,6 +33,11 @@ export default defineComponent({
   },
 
   props: {
+    activeFilters: {
+      type: Object,
+      required: true,
+    },
+
     categories: {
       type: Array,
       required: true,
@@ -39,8 +50,8 @@ export default defineComponent({
   },
 
   methods: {
-    setChexbox: function (name, item, checked) {
-      this.$emit("setChexbox", name, item, checked);
+    setChexbox(inputData) {
+      this.$emit("setChexbox", inputData);
     },
   },
 
