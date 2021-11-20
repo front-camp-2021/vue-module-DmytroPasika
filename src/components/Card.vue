@@ -30,20 +30,33 @@
     </div>
 
     <div class="card__actions">
-      <button class="card__wishlist-btn button" name="wishlist">
+      <button
+        class="card__wishlist-btn button"
+        name="wishlist"
+        @click="() => favorites(item.id)"
+      >
         <div class="card__container-btn">
           <img class="card__heart" src="@/assets/img/Path.svg" alt="Like" />
-          <div class="card__text-btn">WISHLIST</div>
+          <div class="card__text-btn" v-if="!inFavorites(item.id)">
+            WISHLIST
+          </div>
         </div>
       </button>
-      <button class="card__add-btn button" name="addToCart">
-        <div class="card__container-btn">
+      <button
+        class="card__add-btn button"
+        name="addToCart"
+        @click="cart(item.id)"
+      >
+        <div class="card__container-btn" v-if="!inCart(item.id)">
           <img
             class="card__add-to-cart"
             src="@/assets/img/shopping-bag.svg"
             alt="Shop"
           />
           <div class="card__text-btn">ADD TO CART</div>
+        </div>
+        <div class="card__container-btn" v-else>
+          <div class="card__text-btn">REMOVE FROM CART</div>
         </div>
       </button>
     </div>
@@ -52,6 +65,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useMainComposable } from "@/composables/mainComposable";
 
 export default defineComponent({
   name: "Card",
@@ -60,6 +74,40 @@ export default defineComponent({
       type: Object,
       default: () => {},
     },
+  },
+
+  setup() {
+    const mainComposable = useMainComposable();
+    const {
+      addToFavorites,
+      addToCart,
+      inFavorites,
+      inCart,
+      removeFromFavorites,
+      removeFromCart,
+    } = mainComposable;
+
+    const favorites = (id) => {
+      if (inFavorites(id)) {
+        removeFromFavorites(id);
+      } else {
+        addToFavorites(id);
+      }
+    };
+
+    const cart = (id) => {
+      if (inCart(id)) {
+        removeFromCart(id);
+      } else {
+        addToCart(id);
+      }
+    };
+    return {
+      cart,
+      favorites,
+      inCart,
+      inFavorites,
+    };
   },
 });
 </script>

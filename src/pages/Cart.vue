@@ -1,26 +1,38 @@
 <template>
   <div>
     <div class="buttons-container-nav">
-      <button class="buttons-container-nav__btn-home button">
-        <div class="buttons-container-nav__btn-label">Go to main page</div>
-      </button>
-
-      <div class="favorite__button-container">
-        <big-button title="CLEAR ALL FAVORITES" />
-      </div>
+      <router-link to="/">
+        <button class="buttons-container-nav__btn-home button">
+          <div class="buttons-container-nav__btn-label">Go to main page</div>
+        </button>
+      </router-link>
     </div>
-    <card-list />
+    <big-button :title="Titles.Cart" :type="Types.Cart" />
+    <card-list :type="Types.Cart" />
   </div>
 </template>
 
 <script>
-import { defineComponent } from "@vue/runtime-core";
-import BigButton from "./BigButton.vue";
-import CardList from "./CardList.vue";
+import { defineComponent } from "vue";
+import { BigButton, CardList } from "@/components";
+import { useMainComposable } from "@/composables/mainComposable";
 
 export default defineComponent({
-  components: { CardList, BigButton },
-  name: "Favorite",
+  name: "Cart",
+
+  components: {
+    BigButton,
+    CardList,
+  },
+
+  setup() {
+    const mainComposable = useMainComposable();
+    const { Types, Titles } = mainComposable;
+    return {
+      Types,
+      Titles,
+    };
+  },
 });
 </script>
 

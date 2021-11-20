@@ -3,27 +3,18 @@
     <form class="filter-container__form">
       <filter-slider title="Range" />
       <hr class="filter-container__horizontal-line" />
-      <filter-checkbox
-        :items="categories"
-        title="Category"
-        :active-filters="activeFilters"
-        @setChexbox="setChexbox"
-      />
+      <filter-checkbox :items="categories" title="Category" />
       <hr class="filter-container__horizontal-line" />
-      <filter-checkbox
-        :items="brands"
-        title="Brand"
-        @setChexbox="setChexbox"
-        :active-filters="activeFilters"
-      />
+      <filter-checkbox :items="brands" title="Brand" />
     </form>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, toRefs } from "vue";
 import FilterSlider from "@/components/FilterSlider.vue";
 import FilterCheckbox from "@/components/FilterCheckbox.vue";
+import { useMainComposable } from "../composables";
 
 export default defineComponent({
   name: "FilterForm",
@@ -32,31 +23,14 @@ export default defineComponent({
     FilterCheckbox,
   },
 
-  props: {
-    activeFilters: {
-      type: Object,
-      required: true,
-    },
+  setup() {
+    const mainComposable = useMainComposable();
+    const { categories, brands } = toRefs(mainComposable.state);
 
-    categories: {
-      type: Array,
-      required: true,
-    },
-
-    brands: {
-      type: Array,
-      required: true,
-    },
-  },
-
-  methods: {
-    setChexbox(inputData) {
-      this.$emit("setChexbox", inputData);
-    },
-  },
-
-  data() {
-    return {};
+    return {
+      categories,
+      brands,
+    };
   },
 });
 </script>

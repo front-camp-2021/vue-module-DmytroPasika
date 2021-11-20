@@ -8,8 +8,6 @@
         :name="title"
         :item="item"
         :items="items"
-        :active-filters="activeFilters"
-        @setChexbox="setChexbox"
       />
     </ul>
   </div>
@@ -23,10 +21,6 @@ export default defineComponent({
   name: "FilterChexbox",
 
   props: {
-    activeFilters: {
-      type: Object,
-      required: true,
-    },
     items: {
       type: Array,
       required: true,
@@ -34,16 +28,6 @@ export default defineComponent({
     title: {
       type: String,
       required: true,
-    },
-  },
-
-  methods: {
-    setChexbox(inputData) {
-      this.$emit("setChexbox", inputData);
-    },
-
-    isChecked(item) {
-      return this.filterChexbox[this.title.toLowerCase()].includes(item);
     },
   },
 

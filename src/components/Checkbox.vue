@@ -7,8 +7,13 @@
           type="checkbox"
           :value="item"
           class="filter-container__checkbox"
-          :checked="checked"
-          @click="setChexbox"
+          :checked="checked(name, item)"
+          @click="
+            setCheckboxFilter({
+              type: name,
+              value: item,
+            })
+          "
         />
         <div class="filter-container__checkbox-custom"></div>
         <span class="filter-container__value">{{ item }}</span>
@@ -19,15 +24,12 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, toRefs } from "vue";
+import { useMainComposable } from "../composables";
 
 export default defineComponent({
   name: "Checkbox",
   props: {
-    activeFilters: {
-      type: Object,
-      required: true,
-    },
     name: {
       type: String,
       require: true,
@@ -42,22 +44,16 @@ export default defineComponent({
     },
   },
 
-  computed: {
-    checked() {
-      return this.activeFilters.listFilters[this.name.toLowerCase()].includes(
-        this.item.replace("-", " ").toLowerCase()
-      );
-    },
-  },
+  setup() {
+    const mainComposable = useMainComposable();
+    const { setCheckboxFilter, checked } = mainComposable;
+    const { activeFilters } = toRefs(mainComposable.state);
 
-  methods: {
-    setChexbox() {
-      const inputData = {
-        type: this.name,
-        value: this.item,
-      };
-      this.$emit("setChexbox", inputData);
-    },
+    return {
+      setCheckboxFilter,
+      activeFilters,
+      checked,
+    };
   },
 });
 </script>

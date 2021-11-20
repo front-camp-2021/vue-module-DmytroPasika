@@ -1,22 +1,48 @@
 <template>
   <div class="cards__list">
-    <card v-for="item in items" :key="item.id" :item="item" />
+    <card
+      v-for="item in type === Types.Main
+        ? page
+        : type === Types.Favorites
+        ? favorites
+        : type === Types.Cart
+        ? cart
+        : []"
+      :key="item.id"
+      :item="item"
+    />
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, toRefs } from "vue";
+import { useMainComposable } from "../composables";
 import Card from "./Card.vue";
 
 export default defineComponent({
-  components: { Card },
   name: "CardList",
+  components: {
+    Card,
+  },
 
   props: {
-    items: {
-      type: Array,
+    type: {
+      type: String,
       required: true,
     },
+  },
+
+  setup() {
+    const mainComposable = useMainComposable();
+    const { page, Types } = mainComposable;
+    const { favorites, cart } = toRefs(mainComposable.state);
+
+    return {
+      page,
+      favorites,
+      cart,
+      Types,
+    };
   },
 });
 </script>

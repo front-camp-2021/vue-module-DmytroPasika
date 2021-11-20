@@ -10,7 +10,7 @@
     <div class="pagination__pages reference">
       <div
         class="pagination__container"
-        v-for="item in countPages"
+        v-for="item in totalPages"
         :key="item"
         v-bind:class="{ pagination__active: item === currentPage }"
       >
@@ -34,36 +34,22 @@
 </template>
 
 <script>
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent, toRefs } from "vue";
+import { useMainComposable } from "../composables";
 
 export default defineComponent({
   name: "Pagination",
 
-  props: {
-    countPages: {
-      type: Number,
-      required: true,
-    },
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-  },
+  setup() {
+    const mainComposable = useMainComposable();
+    const { totalPages, setCurrentPage } = mainComposable;
+    const { currentPage } = toRefs(mainComposable.state);
 
-  methods: {
-    setCurrentPage(item = 0, type = "pageClick") {
-      if (type === "pageClick") {
-        this.$emit("setCurrentPage", item);
-      } else if (type === "+" && this.currentPage < this.countPages) {
-        this.$emit("setCurrentPage", this.currentPage + 1);
-      } else if (type === "-" && this.currentPage > 1) {
-        this.$emit("setCurrentPage", this.currentPage - 1);
-      }
-    },
-  },
-
-  data() {
-    return {};
+    return {
+      totalPages,
+      currentPage,
+      setCurrentPage,
+    };
   },
 });
 </script>

@@ -1,14 +1,13 @@
 <template>
-  <button
-    class="filter-container__btn-reset button"
-    @click="() => $emit('clear-filter')"
-  >
+  <button class="filter-container__btn-reset button" @click="reset(type)">
     <div class="filter-container__btn-label">{{ title }}</div>
   </button>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import { useMainComposable } from "../composables";
+
 export default defineComponent({
   name: "BigButton",
 
@@ -17,6 +16,39 @@ export default defineComponent({
       type: String,
       required: true,
     },
+
+    type: {
+      type: String,
+      required: true,
+    },
+  },
+
+  setup() {
+    const mainComposable = useMainComposable();
+    const { clearFilter, removeAllFromFavorites, removeAllFromCart, Types } =
+      mainComposable;
+
+    const reset = (type) => {
+      switch (type) {
+        case Types.Main:
+          clearFilter();
+          break;
+        case Types.Cart:
+          removeAllFromCart();
+          break;
+        case Types.Favorites:
+          removeAllFromFavorites();
+          break;
+
+        default:
+          clearFilter();
+          break;
+      }
+    };
+
+    return {
+      reset,
+    };
   },
 });
 </script>

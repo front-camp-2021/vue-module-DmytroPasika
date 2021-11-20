@@ -1,22 +1,32 @@
 <template>
-  <div>
-    <shop-page />
-    <!-- <router-view/> -->
-  </div>
+  <router-view v-if="!loading" />
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { ShopPage } from "./pages/index.js";
+import { defineComponent, toRefs, onMounted } from "vue";
+import { provideMainComposable } from "./composables/mainComposable";
 
 export default defineComponent({
   name: "App",
-  components: {
-    ShopPage,
+
+  setup() {
+    const useMainComposable = provideMainComposable();
+
+    const { loading } = toRefs(useMainComposable.state);
+
+    onMounted(async () => {
+      try {
+        await useMainComposable.getProducts();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+    return {
+      loading,
+    };
   },
 });
 </script>
-
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");

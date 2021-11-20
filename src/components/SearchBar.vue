@@ -1,22 +1,36 @@
 <template>
   <div class="search-bar" data-cy="test">
     <div class="search-bar__result">
-      <span class="search-bar__text"> products found </span>
+      <span
+        class="search-bar__text"
+        v-if="totalFilteredProducts < 100 && totalFilteredProducts !== 0"
+      >
+        {{ totalFilteredProducts }} results found
+      </span>
+      <span
+        class="search-bar__text"
+        v-if="!(totalFilteredProducts < 100 && totalFilteredProducts !== 0)"
+      >
+      </span>
       <div class="search-bar__container-nav">
-        <button class="search-bar__btn-cart button">
-          <img
-            src="@/assets/img/cart4.svg"
-            alt="cart logo"
-            class="search-bar__cart-image"
-          />
-        </button>
-        <button class="search-bar__btn-favorite button">
-          <img
-            src="@/assets/img/heartWhite.svg"
-            alt="heart logo"
-            class="search-bar__favorite-image"
-          />
-        </button>
+        <router-link to="/cart">
+          <button class="search-bar__btn-cart button">
+            <img
+              src="@/assets/img/cart4.svg"
+              alt="cart logo"
+              class="search-bar__cart-image"
+            />
+          </button>
+        </router-link>
+        <router-link to="/favorites">
+          <button class="search-bar__btn-favorite button">
+            <img
+              src="@/assets/img/heartWhite.svg"
+              alt="heart logo"
+              class="search-bar__favorite-image"
+            />
+          </button>
+        </router-link>
       </div>
     </div>
     <form class="search-bar__form">
@@ -35,20 +49,19 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useMainComposable } from "../composables";
 
 export default defineComponent({
   name: "SearchBar",
 
-  data() {
-    return {
-      inputValue: "",
-    };
-  },
+  setup() {
+    const mainComposable = useMainComposable();
+    const { setInputValue, totalFilteredProducts } = mainComposable;
 
-  methods: {
-    setInputValue(inputValue) {
-      this.$emit("inputValue", inputValue);
-    },
+    return {
+      setInputValue,
+      totalFilteredProducts,
+    };
   },
 });
 </script>
