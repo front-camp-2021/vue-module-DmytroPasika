@@ -1,12 +1,42 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <router-view v-if="!loading" />
 </template>
 
+<script>
+import { defineComponent, toRefs, onMounted } from "vue";
+import { provideMainComposable } from "./composables/mainComposable";
+
+export default defineComponent({
+  name: "App",
+
+  setup() {
+    const useMainComposable = provideMainComposable();
+
+    const { loading } = toRefs(useMainComposable.state);
+
+    onMounted(async () => {
+      try {
+        await useMainComposable.getProducts();
+      } catch (error) {
+        console.error(error);
+      }
+    });
+    return {
+      loading,
+    };
+  },
+});
+</script>
+
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+  background-color: #f9f9f9;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Montserrat;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
